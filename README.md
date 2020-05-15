@@ -10,6 +10,12 @@ Add the following script tag to your `index.html` to import MathJax from the CDN
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 ```
 
+If you know for sure that your input will contain only TeX and not MML, you can use a smaller file from the CDN:
+
+```
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+```
+
 ## A String parser function
 
 Most TeX strings out there are delineated by `$` on both ends. Unfortunately, MathJax is looking for strings delineated by escaped parens `\\(` and `\\)`. So we need to create a regex replace to let MathJax know which content we would like rendered:
