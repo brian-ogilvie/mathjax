@@ -1,68 +1,39 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# MathJax in React
 
-## Available Scripts
+With a simple import of the MathJax library via a CDN, we can render mathematical expressions easily in a React app.
 
-In the project directory, you can run:
+## Setup
 
-### `yarn start`
+Add the following script tag to your `index.html` to import MathJax from the CDN:
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## A String parser function
 
-### `yarn test`
+Most TeX strings out there are delineated by `$` on both ends. Unfortunately, MathJax is looking for strings delineated by escaped parens `\\(` and `\\)`. So we need to create a regex replace to let MathJax know which content we would like rendered:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+function parseTex(str) {
+  return str.replace(/\$([^$]+)\$/g, (_, content) => {
+    return '\\(' + content + '\\)';
+  });
+}
+```
 
-### `yarn build`
+All this does is replace the leading and closing `$` in each expression with an escaped open or close paren, where appropriate. 
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## The Result
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Given an input string of:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+"Determining the astrophysical $^{20}$Ne($\\alpha$,p)$^{23}$Na reaction rate"
+```
 
-### `yarn eject`
+We get:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<img alt="output" src="https://res.cloudinary.com/brian-ogilvie/image/upload/v1589568260/Random%20GitHub/Screen_Shot_2020-05-15_at_2.42.21_PM.png" />
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Our regex function will find and replace all sections appropriately.

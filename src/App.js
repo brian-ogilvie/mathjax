@@ -1,24 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import data from './input.json';
+
+const { text, text2, text3 } = data;
+
+function parseTex(str) {
+  return str.replace(/\$([^$]+)\$/g, (_, content) => {
+    return '\\(' + content + '\\)';
+  });
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>{parseTex(text)}</p>
+      <p>{parseTex(text2)}</p>
+      <p>{parseTex(text3)}</p>
     </div>
   );
 }
