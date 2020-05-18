@@ -6,7 +6,7 @@ const { text, text2, text3 } = data;
 
 function parseTex(str) {
   return str.replace(/\$([^$]+)\$/g, (_, content) => {
-    return '\\(' + content + '\\)';
+    return `\\(${content}\\)`;
   });
 }
 
