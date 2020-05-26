@@ -1,21 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import data from './input.json';
-
-const { text, text2, text3 } = data;
-
-function parseTex(str) {
-  return str.replace(/\$([^$]+)\$/g, (_, content) => {
-    return `\\(${content}\\)`;
-  });
-}
+import { getPosters } from './services/API';
 
 function App() {
+  const [posters, setPosters] = useState(null);
+  useEffect(() => {
+    async function getData() {
+      const result = await getPosters();
+      setPosters(result);
+    }
+    getData();
+  }, []);
+
+  useEffect(() => {
+    const { MathJax } = window;
+    if (MathJax) {
+      MathJax.typeset();
+    }
+  }, [posters]);
+
   return (
     <div className="App">
-      <p>{parseTex(text)}</p>
-      <p>{parseTex(text2)}</p>
-      <p>{parseTex(text3)}</p>
+      {posters &&
+        posters.map(posterTitle => (
+          <p
+            key={posterTitle}
+            dangerouslySetInnerHTML={{
+              __html: posterTitle,
+            }}
+          />
+        ))}
     </div>
   );
 }
